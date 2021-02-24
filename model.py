@@ -2,7 +2,7 @@ import time
 import xlrd, xlwt
 
 # 运算
-store_cost_pre_day_pre_unit = 10
+store_cost_pre_day_pre_unit = 1
 
 
 # 未来需要增加传输损耗和传输花费

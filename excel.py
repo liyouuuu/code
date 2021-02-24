@@ -55,10 +55,10 @@ if __name__ == '__main__':
     btime = data(0, 0, 0)
     etime = data(0, 0, 0)
     # 设置开始时间和结束时间
-    btime.setday(31)
+    btime.setday(7)
     btime.setmonth(1)
-    etime.setday(3)
-    etime.setmonth(3)
+    etime.setday(7)
+    etime.setmonth(2)
     citydata = xlrd.open_workbook("data.xlsx")
     city_sheets = citydata.sheet_by_name("city")
     citys_data = []  # 储存所有城市的数据，元素为city_data
