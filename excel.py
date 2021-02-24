@@ -58,7 +58,7 @@ if __name__ == '__main__':
     btime.setday(31)
     btime.setmonth(1)
     etime.setday(3)
-    etime.setmonth(2)
+    etime.setmonth(3)
     citydata = xlrd.open_workbook("data.xlsx")
     city_sheets = citydata.sheet_by_name("city")
     citys_data = []  # 储存所有城市的数据，元素为city_data

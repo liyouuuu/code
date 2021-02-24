@@ -78,7 +78,7 @@ if __name__ == '__main__':
     active = True
     citys = []
     station = model.peer("station", 10000000, 1000000, 0, 0, 0, 50, 0, 0, 10000000000)
-    for s in citys_data:
+    for s in citys_data.copy():
         city = model.peer(s[btime.month][10], s[btime.month - 1][1], s[btime.month - 1][2], s[btime.month - 1][3],
                           s[btime.month - 1][4], s[btime.month - 1][5], s[btime.month - 1][6],
                           s[btime.month - 1][7], s[btime.month - 1][8], s[btime.month - 1][9])
@@ -95,7 +95,7 @@ if __name__ == '__main__':
         # 多出来的能源都卖给发电站，少的都从发电站买
         buy_willings = []
         sale_willings = []
-        for s in citys:
+        for s in citys.copy():
             if s.will_need() > 0:
                 a = model.buy_willing(s, s.will_need())
                 buy_willings.append(a)
@@ -105,14 +105,14 @@ if __name__ == '__main__':
             else:
                 pass
         if buy_willings != []:
-            for s in buy_willings:
+            for s in buy_willings.copy():
                 s.buyer.buy_from_station(s.number)
         if sale_willings != []:
-            for s in sale_willings:
+            for s in sale_willings.copy():
                 s.saler.sale_to_station(s.number)
 
         result = []
-        for s in citys:
+        for s in citys.copy():
             s.nextday()
             result.append(s.detail())
         station.detail()
@@ -138,7 +138,7 @@ if __name__ == '__main__':
         station.buy_power = 0
         station.sale_power = 0
         btime.nextday()
-        for s in citys:
+        for s in citys.copy():
             s.buy_power = 0
             s.sale_power = 0
 
