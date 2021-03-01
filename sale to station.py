@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # 设置开始时间和结束时间
     btime.setday(31)
     btime.setmonth(1)
-    etime.setday(2)
+    etime.setday(3)
     etime.setmonth(2)
     citydata = xlrd.open_workbook("data.xlsx")
     city_sheets = citydata.sheet_by_name("city")

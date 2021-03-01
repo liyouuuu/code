@@ -55,7 +55,7 @@ if __name__ == '__main__':
     btime = data(0, 0, 0)
     etime = data(0, 0, 0)
     # 设置开始时间和结束时间
-    btime.setday(7)
+    btime.setday(1)
     btime.setmonth(1)
     etime.setday(7)
     etime.setmonth(2)
