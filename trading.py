@@ -12,14 +12,7 @@ class data:
 
     def setmonth(self, month):
         self.month = month
-        for s in [1, 3, 5, 7, 8, 10, 12]:
-            if s == self.month:
-                self.length = 31
-        for s in [4, 6, 9, 11]:
-            if s == self.month:
-                self.length = 30
-        if self.month == 2:
-            self.length = 28
+        self.length = 1  # 为了现实效果，把每个月的长度设置为了一天
 
     def setday(self, day):
         self.day = day
@@ -29,14 +22,7 @@ class data:
             self.month += 1
         else:
             self.month = 1
-        for s in [1, 3, 5, 7, 8, 10, 12]:
-            if s == self.month:
-                self.length = 31
-        for s in [4, 6, 9, 11]:
-            if s == self.month:
-                self.length = 30
-        if self.month == 2:
-            self.length = 28
+        self.length = 1
 
     def nextday(self):
         if self.day < self.length:
@@ -55,10 +41,13 @@ if __name__ == '__main__':
     btime = data(0, 0, 0)
     etime = data(0, 0, 0)
     # 设置开始时间和结束时间
-    btime.setday(7)
+    btime.setday(1)
     btime.setmonth(1)
-    etime.setday(7)
-    etime.setmonth(2)
+    etime.setday(1)
+    etime.setmonth(10)
+    # 设置预见的天数
+    foresee = 4
+    # 读取城市的数据
     citydata = xlrd.open_workbook("data.xlsx")
     city_sheets = citydata.sheet_by_name("city")
     citys_data = []  # 储存所有城市的数据，元素为city_data
@@ -80,10 +69,27 @@ if __name__ == '__main__':
     station = model.peer("station", 10000000, 1000000, 0, 0, 0, 50, 0, 0, 10000000000)
 
     for s in citys_data.copy():
-        city = model.peer(s[btime.month][10], s[btime.month - 1][1], s[btime.month - 1][2], s[btime.month - 1][3],
+        city = model.peer(s[btime.month - 1][10], s[btime.month - 1][1], s[btime.month - 1][2], s[btime.month - 1][3],
                           s[btime.month - 1][4], s[btime.month - 1][5], s[btime.month - 1][6],
                           s[btime.month - 1][7], s[btime.month - 1][8], s[btime.month - 1][9])
         citys.append(city)
+
+    # 分开记录城市的willings
+    citys_willings = []
+    for s in citys.copy():
+        city_willings = []
+        for b in range(btime.month, etime.month):
+            if s.will_need() > 0:
+                a = model.buy_willing(s, s.will_need())  # 发出购买欲望
+                city_willings.append(a)
+            elif s.will_excess() > 0:
+                a = model.sale_willing(s, s.will_excess(), s.sale_price)
+                city_willings.append(a)
+            else:
+                pass
+        citys_willings.append(city_willings)
+    print(citys_willings[0])
+
     while active:
         time.sleep(0)
         print("data: %s-%s" % (btime.month, btime.day))
@@ -93,6 +99,8 @@ if __name__ == '__main__':
             s.set_speed(citys_data[i][btime.month-1][5])
             s.set_price(citys_data[i][btime.month-1][6])
             i += 1
+
+
         # 记录所有的购买欲望和卖出欲望
         buy_willings = []  # 保存
         sale_willings = []
@@ -106,13 +114,6 @@ if __name__ == '__main__':
                 sale_willings.append(a)
             else:
                 pass
-
-        for s in buy_willings.copy():
-            print("buy1 " + s.buyer.name)
-        for s in sale_willings.copy():
-            print("sale1 " + s.saler.name)
-
-
         # 进行匹配
         model.bubble_sort(sale_willings)  # 把卖出的价格降序
         # 匹配的情况有三种，买大于卖，买等于卖，买小于卖
@@ -144,11 +145,6 @@ if __name__ == '__main__':
             s.do()
 
         for s in buy_willings.copy():
-            print("buy2 " + s.buyer.name)
-        for s in sale_willings.copy():
-            print("sale2 " + s.saler.name)
-
-        for s in buy_willings.copy():
             a = model.order(buy_willings[0].buyer, station, station.sale_price, buy_willings[0].number)
             orderlist.append(a)
             a.do()
@@ -158,11 +154,6 @@ if __name__ == '__main__':
             orderlist.append(a)
             a.do()
             sale_willings.remove(s)
-
-        for s in buy_willings.copy():
-            print("buy3 " + s.buyer.name)
-        for s in sale_willings.copy():
-            print("sale3 " + s.saler.name)
 
         buy_willings = []
         sale_willings = []

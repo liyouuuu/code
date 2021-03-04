@@ -80,7 +80,7 @@ if __name__ == '__main__':
     station = model.peer("station", 10000000, 1000000, 0, 0, 0, 50, 0, 0, 10000000000)
 
     for s in citys_data.copy():
-        city = model.peer(s[btime.month][10], s[btime.month - 1][1], s[btime.month - 1][2], s[btime.month - 1][3],
+        city = model.peer(s[btime.month - 1][10], s[btime.month - 1][1], s[btime.month - 1][2], s[btime.month - 1][3],
                           s[btime.month - 1][4], s[btime.month - 1][5], s[btime.month - 1][6],
                           s[btime.month - 1][7], s[btime.month - 1][8], s[btime.month - 1][9])
         citys.append(city)
