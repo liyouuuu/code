@@ -21,16 +21,16 @@ class peer:
         self.store_cost = store_cost  # 每天储存能源的花费
         self.income = income  # 每天卖出的收益
         self.balance = balance  # 还剩下多少钱
-
+    
     def set_get_power(self, get_power):
         self.get_power = get_power
-
+    
     def set_speed(self, speed):
         self.speed = speed
-
+    
     def set_price(self, price):
         self.sale_price = price
-
+    
     def nextday(self):  # 经过一天
         self.store_power = self.store_power - self.speed + self.get_power  # 更新储存的能源数量
         self.store_cost = self.store_power * store_cost_pre_day_pre_unit  # 更新每天储存的费用
@@ -38,7 +38,7 @@ class peer:
         self.balance = self.balance - self.store_cost + self.income  # 更新每天的余额
         # 更新获得的能源
         # 更新速度
-
+    
     def will_need(self):  # 未来需要购买，1.买刚好够用的 2.一次买多些存起来
         # 暂时！！！！！！写第一种情况
         needbuy_power = self.store_power - self.speed + self.get_power
@@ -46,7 +46,7 @@ class peer:
             return 0 - needbuy_power
         else:
             return -1
-
+    
     def will_excess(self):  # 未来会过剩 1.现在卖,保证储量为0 2.留着以后处理（卖还是自己用）
         # 暂时！！！！！写第一种情况
         excess_power = self.store_power - self.speed + self.get_power
@@ -54,7 +54,7 @@ class peer:
             return excess_power
         else:
             return -1
-
+    
     def detail(self):  # 展示结果，把结果写入excel表
         print(self.name)
         print("balance:%srmb" % self.balance)
@@ -63,13 +63,13 @@ class peer:
         print("buy power:%skwh" % self.buy_power)
         print("")
         return [self.name, self.balance, self.store_power, self.sale_power, self.buy_power]
-
+    
     def buy_from_station(self, number):
         self.store_power = self.store_power + number
         self.buy_power = self.buy_power + number
         self.balance = self.balance - number * station.sale_price
         station.sale_power = station.sale_power + number
-
+    
     def sale_to_station(self, number):
         self.store_power = self.store_power - number
         self.sale_power = self.sale_power + number
@@ -82,9 +82,10 @@ class buy_willing:  # 购买欲望 状态1表示为买
         self.buyer = buyer
         self.number = number
         self.statue = 1
-        
+    
     def reduce(self, first):  # 购买欲望减少（实际为买了一部分）
         self.number = self.number - first
+
 
 class sale_willing:  # 卖出欲望 状态0表示为卖
     def __init__(self, saler, number, price):
@@ -92,32 +93,44 @@ class sale_willing:  # 卖出欲望 状态0表示为卖
         self.number = number
         self.price = price
         self.statue = 0
-
+    
     def reduce(self, first):  # 购买欲望减少（实际为买了一部分）
         self.number = self.number - first
-
+    
+    def saleAndBuy(self, buy_willing):
+        if self.number > buy_willing.number:
+            self.reduce(buy_willing.number)
+            buy_willing.number = 0
+        elif self.number < buy_willing.number:
+            buy_willing.reduce(self.number)
+            self.number = 0
+        else:
+            self.number = 0
+            buy_willing.number = 0
+            
 class noWilling:
-    def __init__(self,buyer):
+    def __init__(self, buyer):
         self.buyer = buyer
         self.statue = "null"
-        
+
+
 class order:
     def __init__(self, buyer, saler, price, number):  # 单价和数量
         self.buyer = buyer
         self.saler = saler
         self.price = price
         self.number = number
-
+    
     def do(self):
         self.buyer.store_power = self.buyer.store_power + self.number
         self.buyer.buy_power = self.buyer.buy_power + self.number
         self.buyer.balance = self.buyer.balance - self.number * self.price
-
+        
         self.saler.store_power = self.saler.store_power - self.number
         self.saler.sale_power = self.saler.sale_power + self.number
         self.saler.income = self.saler.income + self.number * self.price
         self.saler.balance = self.saler.balance + self.number * self.price
-
+    
     def detail(self):  # 用于测试，后期删除
         print("buyer:" + self.buyer.name)
         print("saler:" + self.saler.name)
@@ -140,7 +153,7 @@ if __name__ == '__main__':
     xizang = peer("xizang", 1000, 0, 0, 0, 300, 5, 0, 0, 100000)
     station = peer("station", 10000000, 1000000, 0, 0, 0, 50, 0, 0, 10000000000)
     city = [shanghai, shanxi, xizang]
-
+    
     active = True
     i = 1
     while active:
