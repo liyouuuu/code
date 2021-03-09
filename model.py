@@ -77,25 +77,30 @@ class peer:
         station.buy_power = station.buy_power + number
 
 
-class buy_willing:  # 购买欲望
+class buy_willing:  # 购买欲望 状态1表示为买
     def __init__(self, buyer, number):
         self.buyer = buyer
         self.number = number
-
+        self.statue = 1
+        
     def reduce(self, first):  # 购买欲望减少（实际为买了一部分）
         self.number = self.number - first
 
-
-class sale_willing:  # 卖出欲望
+class sale_willing:  # 卖出欲望 状态0表示为卖
     def __init__(self, saler, number, price):
         self.saler = saler
         self.number = number
         self.price = price
+        self.statue = 0
 
     def reduce(self, first):  # 购买欲望减少（实际为买了一部分）
         self.number = self.number - first
 
-
+class noWilling:
+    def __init__(self,buyer):
+        self.buyer = buyer
+        self.statue = "null"
+        
 class order:
     def __init__(self, buyer, saler, price, number):  # 单价和数量
         self.buyer = buyer

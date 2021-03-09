@@ -87,9 +87,21 @@ if __name__ == '__main__':
                 a = model.sale_willing(s, s.will_excess(), s.sale_price)
                 city_willings.append(a)
             else:
-                pass
+                a = model.noWilling(s)
+                city_willings.append(a)
             s.set_speed(citys_data[i][b][5])
             s.set_get_power(citys_data[i][b][1])
         i += 1
         citys_willings.append(city_willings)
-    print(citys_willings[1][1].number)
+    # print(citys_willings[1][1].number) 第二个城市的第二个月的愿望的数目
+    
+    # 打印出原始的消费行为
+    for s in citys_willings.copy():
+        for i in range(btime.month-1, etime.month-2):
+            if s[i].statue == 0:
+                print("sale willing:%s num:%s price:%s" % (s[i].saler.name, s[i].number, s[i].price))
+            elif s[i].statue == 1:
+                print("buy willing:%s num:%s" % (s[i].buyer.name, s[i].number))
+            else:
+                print("no willing:%s" % s[i].buyer.name)
+    # 整合消费行为
