@@ -82,6 +82,7 @@ class buy_willing:  # 购买欲望 状态1表示为买
         self.buyer = buyer
         self.number = number
         self.statue = 1
+        self.date = ''
     
     def reduce(self, first):  # 购买欲望减少（实际为买了一部分）
         self.number = self.number - first
@@ -93,6 +94,7 @@ class sale_willing:  # 卖出欲望 状态0表示为卖
         self.number = number
         self.price = price
         self.statue = 0
+        self.date = ''
     
     def reduce(self, first):  # 购买欲望减少（实际为买了一部分）
         self.number = self.number - first
@@ -107,12 +109,14 @@ class sale_willing:  # 卖出欲望 状态0表示为卖
         else:
             self.number = 0
             buy_willing.number = 0
-            
+
+
 class noWilling:
     def __init__(self, buyer):
         self.buyer = buyer
         self.statue = "null"
-
+        self.date = ''
+        
 
 class order:
     def __init__(self, buyer, saler, price, number):  # 单价和数量
