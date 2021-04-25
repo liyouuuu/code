@@ -43,11 +43,6 @@ def prewrite(row, col, num):
 #             return 0
 #         else:
 #
-def prewrite(row, col, num):
-    a = [row, col, num]
-    write_data.append(a)
-
-
 def PreWrite(row, col, num):
     a = [row, col, num]
     thirdresult.append(a)

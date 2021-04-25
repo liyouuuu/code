@@ -4,7 +4,6 @@ import xlwt
 import model
 import optimized
 
-
 class data:
     def __init__(self, month, day, length):
         self.month = month
@@ -97,7 +96,7 @@ if __name__ == '__main__':
     citys_willings = [city_willings[i:i + (etime.month - btime.month)] for i in
                       range(0, len(city_willings), (etime.month - btime.month))]
     print(citys_willings[1][6])
-    while False:
+    while True:
         result = []
         buy_willings = []
         sale_willings = []
